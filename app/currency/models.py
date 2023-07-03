@@ -8,3 +8,8 @@ class Rate(models.Model):
     created = models.DateTimeField(auto_now_add = True)
     source = models.CharField(max_length=32) #examples: privatbank, monobank
     type = models.CharField(max_length=3) #examples: USD, EUR 
+
+class ContactUs(models.Model):
+    email_from = models.EmailField(max_length=48)
+    subject = models.CharField(max_length=32)
+    message = models.TextField()
