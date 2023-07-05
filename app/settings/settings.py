@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7j%+)xygq^u!egh*^(yr6hgwhmv$k#z@2g@x)gt)i#^5%y62i#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#TODO move to env
+# TODO move to env
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
 
     'currency',
 ]

@@ -1,7 +1,8 @@
-import string
 import random
+import string
 
-def generate_password(query_password_length = 10) -> str:
+
+def generate_password(query_password_length=10) -> str:
     choices = string.ascii_letters + string.digits + r"""#$%&'()*+,-./:;=?@[\]^_`{|}~"""
     result = ""
 
@@ -12,4 +13,4 @@ def generate_password(query_password_length = 10) -> str:
 
     for _ in range(query_password_length):
         result += random.choice(choices)
-    return result 
+    return result
