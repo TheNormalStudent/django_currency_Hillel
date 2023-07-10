@@ -7,8 +7,8 @@ from django.shortcuts import render # noqa
 # Create your views here.
 
 
-def hello_world(request):
-    return HR('Hello world')
+def index(request):
+    return render(request, 'index.html')
 
 
 def generate_password(request):
@@ -20,11 +20,11 @@ def generate_password(request):
 def rate_list(request):
     rates = Rate.objects.all()
 
-    result = []
-    for rate in rates:
-        result.append(f'Rate: {rate.id} Sale: {rate.sale} Buy: {rate.buy} </br>')
+    context = {
+        'rate_list': rates,
+    }
 
-    return HR(str(result))
+    return render(request, 'rate_list.html', context=context)
 
 
 def contact_us_list(request):
@@ -37,3 +37,8 @@ def contact_us_list(request):
             )
 
     return HR(str(result))
+
+
+def response_codes(request):
+    response = HR('Responce', status=301, headers={'Location': '/rate/list/'})
+    return response
