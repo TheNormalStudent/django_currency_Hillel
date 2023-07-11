@@ -5,9 +5,20 @@ Rate list
 {%endblock%}
 
 {% block main_content %}
-
-
-{% for rate in rate_list %}
-ID: {{rate.id}} Sale: {{rate.sale}} Buy: {{rate.buy}}</br>
-{% endfor %}
-{%endblock%}
+<table>
+    <tr>
+        <td> ID </td>
+        <td> Sell </td> 
+        <td> Buy </td> 
+        <td> Source </td>
+    </tr>
+    {% for rate in rate_list%}
+    <tr>
+        <td>{{rate.id}}</td>
+        <td>{{rate.sale}}</td>
+        <td>{{rate.buy}}</td>
+        <td>{{rate.source}}</td>
+    </tr>
+    {%endfor%}
+</table>
+{% endblock %}

@@ -28,15 +28,13 @@ def rate_list(request):
 
 
 def contact_us_list(request):
-    conctactus = ContactUs.objects.all()
+    contactus = ContactUs.objects.all()
 
-    result = []
-    for item in conctactus:
-        result.append(
-            f'ID: {item.id} Email: {item.email_from} Subject: {item.subject} Message: {item.message} </br>'
-            )
+    context = {
+        'contactUs_lst': contactus,
+    }
 
-    return HR(str(result))
+    return render(request, 'contactUs_list.html', context=context)
 
 
 def response_codes(request):
