@@ -1,8 +1,9 @@
+from currency.forms import RateForm
 from currency.models import ContactUs, Rate
 from currency.utils import generate_password as gen_pass
 
-from django.http import HttpResponse as HR
-from django.shortcuts import render # noqa
+from django.http import HttpResponse as HR, HttpResponseRedirect as HRR
+from django.shortcuts import get_object_or_404, render # noqa
 
 # Create your views here.
 
@@ -27,13 +28,76 @@ def rate_list(request):
     return render(request, 'rate_list.html', context=context)
 
 
+def rate_create(request):
+    if request.method == "POST":
+        form = RateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HRR('/rate/list/')
+    elif request.method == "GET":
+        form = RateForm()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'rate_create.html', context=context)
+
+
+def rate_details(request, rate_id):
+
+    # try:
+    #     rate = Rate.objects.get(id=rate_id)
+    # except Rate.DoesNotExist as exc:
+    #     raise H404(exc)
+
+    rate = get_object_or_404(Rate, id=rate_id)
+
+    context = {
+        'object': rate
+    }
+
+    return render(request, 'rate_details.html', context=context)
+
+
+def rate_update(request, rate_id):
+    rate = get_object_or_404(Rate, id=rate_id)
+
+    if request.method == "POST":
+        form = RateForm(request.POST, instance=rate)
+        if form.is_valid():
+            form.save()
+            return HRR('/rate/list/')
+    elif request.method == "GET":
+        form = RateForm(instance=rate)
+
+    context = {
+        'form': form,
+        'rate_id': rate_id
+    }
+
+    return render(request, 'rate_update.html', context=context)
+
+
+def rate_delete(request, rate_id):
+    rate = get_object_or_404(Rate, id=rate_id)
+
+    if request.method == "POST":
+        rate.delete()
+        return HRR('/rate/list/')
+
+    context = {
+        'object': rate,
+    }
+    return render(request, 'rate_delete.html', context=context)
+
+
 def contact_us_list(request):
     contactus = ContactUs.objects.all()
 
     context = {
         'contactUs_lst': contactus,
     }
-
     return render(request, 'contactUs_list.html', context=context)
 
 

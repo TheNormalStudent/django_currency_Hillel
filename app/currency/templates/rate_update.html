@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Rate Details
+{%endblock%}
+
+{% block main_content %}
+
+Rate Update of Rate {{ rate_id }}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Send to Django Server </button>
+</form>
+
+{% endblock %}

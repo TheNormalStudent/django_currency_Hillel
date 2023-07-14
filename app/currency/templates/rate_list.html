@@ -5,19 +5,27 @@ Rate list
 {%endblock%}
 
 {% block main_content %}
+<a href = /rate/create/>Create Rate</a>
+<br>
 <table>
     <tr>
         <td> ID </td>
         <td> Sell </td> 
         <td> Buy </td> 
         <td> Source </td>
+        <td> Details </td>
+        <td> Update </td> 
+        <td> Delete </td>
     </tr>
     {% for rate in rate_list%}
     <tr>
-        <td>{{rate.id}}</td>
+        <td>{{rate.id}}</td>    
         <td>{{rate.sale}}</td>
         <td>{{rate.buy}}</td>
         <td>{{rate.source}}</td>
+        <td><a href="/rate/details/{{ rate.id }}/"> Details </a></td>
+        <td><a href="/rate/update/{{ rate.id }}/"> Update </a></td>
+        <td><a href="/rate/delete/{{ rate.id }}/"> Delete </a></td>
     </tr>
     {%endfor%}
 </table>
