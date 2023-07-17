@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Source Update
+{%endblock%}
+
+{% block main_content %}
+
+Source Update of Source {{ source_id }}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Update </button>
+</form>
+
+{% endblock %}
