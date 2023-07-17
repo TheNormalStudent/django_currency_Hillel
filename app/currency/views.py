@@ -1,5 +1,5 @@
-from currency.forms import RateForm
-from currency.models import ContactUs, Rate
+from currency.forms import RateForm, SourceForm
+from currency.models import ContactUs, Rate, Source
 from currency.utils import generate_password as gen_pass
 
 from django.http import HttpResponse as HR, HttpResponseRedirect as HRR
@@ -25,7 +25,7 @@ def rate_list(request):
         'rate_list': rates,
     }
 
-    return render(request, 'rate_list.html', context=context)
+    return render(request, 'rate_front/rate_list.html', context=context)
 
 
 def rate_create(request):
@@ -41,7 +41,7 @@ def rate_create(request):
         'form': form
     }
 
-    return render(request, 'rate_create.html', context=context)
+    return render(request, 'rate_front/rate_create.html', context=context)
 
 
 def rate_details(request, rate_id):
@@ -57,7 +57,7 @@ def rate_details(request, rate_id):
         'object': rate
     }
 
-    return render(request, 'rate_details.html', context=context)
+    return render(request, 'rate_front/rate_details.html', context=context)
 
 
 def rate_update(request, rate_id):
@@ -76,7 +76,7 @@ def rate_update(request, rate_id):
         'rate_id': rate_id
     }
 
-    return render(request, 'rate_update.html', context=context)
+    return render(request, 'rate_front/rate_update.html', context=context)
 
 
 def rate_delete(request, rate_id):
@@ -89,7 +89,75 @@ def rate_delete(request, rate_id):
     context = {
         'object': rate,
     }
-    return render(request, 'rate_delete.html', context=context)
+    return render(request, 'rate_front/rate_delete.html', context=context)
+
+
+def source_create(request):
+    if request.method == "POST":
+        form = SourceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HRR('/source/list/')
+    elif request.method == "GET":
+        form = SourceForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'sources_front/sources_create.html', context=context)
+
+
+def source_list(request):
+    sources = Source.objects.all()
+
+    context = {
+        'source_list': sources,
+    }
+
+    return render(request, 'sources_front/sources_list.html', context=context)
+
+
+def source_update(request, source_id):
+    source = get_object_or_404(Source, id=source_id)
+
+    if request.method == "POST":
+        form = SourceForm(request.POST, instance=source)
+        if form.is_valid():
+            form.save()
+            return HRR('/source/list/')
+    elif request.method == "GET":
+        form = SourceForm(instance=source)
+
+    context = {
+        'form': form,
+        'source_id': source_id
+    }
+
+    return render(request, 'sources_front/source_update.html', context=context)
+
+
+def source_delete(request, source_id):
+    source = get_object_or_404(Source, id=source_id)
+
+    if request.method == "POST":
+        source.delete()
+        return HRR('/source/list/')
+
+    context = {
+        'object': source,
+    }
+    return render(request, 'sources_front/source_delete.html', context=context)
+
+
+def source_details(request, source_id):
+    source = get_object_or_404(Source, id=source_id)
+
+    context = {
+        'object': source
+    }
+
+    return render(request, 'sources_front/source_details.html', context=context)
 
 
 def contact_us_list(request):

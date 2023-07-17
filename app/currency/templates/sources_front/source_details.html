@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Source Details
+{%endblock%}
+
+{% block main_content %}
+
+Source Details
+
+ID: {{ object.id }} <br>
+Source Name: {{ object.name }} <br>
+URL: {{ object.source_url }} <br>
+
+{% endblock %}
