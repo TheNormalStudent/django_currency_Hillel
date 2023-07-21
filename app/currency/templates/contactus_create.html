@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Contacts
+{%endblock%}
+
+{% block main_content %}
+
+Contact US
+
+<form method="post"> 
+    {% csrf_token %}
+    {{ form.as_p}}
+
+    <button type="Submit"> Send to Django Serv </button>
+</form>
+
+{% endblock %}

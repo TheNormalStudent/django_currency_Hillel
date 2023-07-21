@@ -1,7 +1,10 @@
+from config import get_username_and_password_for_settings as get_usrnm_and_passw
+
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source
 from currency.utils import generate_password as gen_pass
 
+from django.core.mail import send_mail
 from django.http import HttpResponse as HR
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
@@ -100,11 +103,43 @@ class SourceDetailView(DetailView):
     template_name = 'sources_front/source_details.html'
 
 
+class ContactUsCreateView(CreateView):
+    model = ContactUs
+    success_url = reverse_lazy('index')
+    template_name = 'contactus_create.html'
+    fields = (
+        'email_to',
+        'subject',
+        'body'
+    )
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        body = form.cleaned_data['body']
+        email_to = form.cleaned_data['email_to']
+        info = get_usrnm_and_passw()
+
+        full_email_body = f'''
+        Email from: {email_to}
+        Body: {body}
+        '''
+
+        send_mail(
+            subject,
+            full_email_body,
+            info['username'],  # TODO
+            ['fenderoksp@gmail.com'],  # TODO
+            fail_silently=False,
+        )
+
+        return super().form_valid(form)
+
+
 def contact_us_list(request):
     contactus = ContactUs.objects.all()
 
     context = {
-        'contactUs_lst': contactus,
+        'contactUs_list': contactus,
     }
     return render(request, 'contactUs_list.html', context=context)
 
