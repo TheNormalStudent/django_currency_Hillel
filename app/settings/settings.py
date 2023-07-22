@@ -27,6 +27,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'debug_toolbar',
+    'rangefilter',
+    'import_export',
 
     'currency',
 
@@ -131,3 +133,4 @@ EMAIL_PORT = 587
 email_info = get_info()
 EMAIL_HOST_USER = email_info['username']
 EMAIL_HOST_PASSWORD = email_info['password']
+SUPPORT_EMAIL = EMAIL_HOST_USER
