@@ -8,16 +8,16 @@ Contact us list
 <table>
     <tr>
         <td> ID </td>
-        <td> Email from </td> 
+        <td> Email to</td> 
         <td> Subject </td> 
         <td> Message </td>
     </tr>
-    {% for contact in contactus %}
+    {% for contact in contactUs_list %}
     <tr>
         <td>{{contact.id}}</td>
-        <td>{{contact.email_from}}</td>
+        <td>{{contact.email_to}}</td>
         <td>{{contact.subject}}</td>
-        <td>{{contact.message}}</td>
+        <td>{{contact.body}}</td>
     </tr>
     {%endfor%}
 </table>
