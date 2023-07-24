@@ -1,9 +1,11 @@
 from currency.forms import RateForm, SourceForm
 from currency.models import ContactUs, Rate, Source
+from currency.tasks import contact_us
 from currency.utils import generate_password as gen_pass
 
-from django.conf import settings
-from django.core.mail import send_mail
+
+# from django.conf import settings
+# from django.core.mail import send_mail
 from django.http import HttpResponse as HR
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
@@ -122,13 +124,7 @@ class ContactUsCreateView(CreateView):
         Body: {body}
         '''
 
-        send_mail(
-            subject,
-            full_email_body,
-            settings.EMAIL_HOST_USER,
-            [settings.SUPPORT_EMAIL],
-            fail_silently=False,
-        )
+        contact_us.apply_async(args=(subject, ), kwargs={'body': full_email_body})
 
         return super().form_valid(form)
 
