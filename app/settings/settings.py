@@ -134,3 +134,5 @@ email_info = get_info()
 EMAIL_HOST_USER = email_info['username']
 EMAIL_HOST_PASSWORD = email_info['password']
 SUPPORT_EMAIL = EMAIL_HOST_USER
+
+CELERY_BROKER_URL = 'amqp://localhost'
