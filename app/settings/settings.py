@@ -1,6 +1,9 @@
 from pathlib import Path
 
+from celery.schedules import crontab
+
 from config import get_username_and_password_for_settings as get_info
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,3 +139,10 @@ EMAIL_HOST_PASSWORD = email_info['password']
 SUPPORT_EMAIL = EMAIL_HOST_USER
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+CELERY_BEAT_SCHEDULE = {
+    'debug': {
+        'task': 'currency.tasks.parse_privatbank',
+        'schedule': crontab(minute='*/1'),
+    },
+}
