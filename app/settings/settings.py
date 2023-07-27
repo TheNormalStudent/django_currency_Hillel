@@ -141,8 +141,30 @@ SUPPORT_EMAIL = EMAIL_HOST_USER
 CELERY_BROKER_URL = 'amqp://localhost'
 
 CELERY_BEAT_SCHEDULE = {
-    'debug': {
+    'parse_privat':
+    {
         'task': 'currency.tasks.parse_privatbank',
         'schedule': crontab(minute='*/1'),
+    },
+
+    'parse_bank_com_ua':
+    {
+        'task': 'currency.tasks.parse_bank_com_ua',
+        'schedule': crontab(minute='*/1'),
+    },
+        'parse_monobank':
+    {
+        'task': 'currency.tasks.parse_monobank',
+        'schedule': crontab(minute='*/1'),
+    },
+        'parse_vkurse_dp':
+    {
+        'task': 'currency.tasks.parse_vkurse_dp',
+        'schedule': crontab(minute='*/1')
+    },
+        'parse_minfin':
+    {
+        'task': 'currency.tasks.parse_minfin',
+        'schedule': crontab(minute='*/1')
     },
 }
