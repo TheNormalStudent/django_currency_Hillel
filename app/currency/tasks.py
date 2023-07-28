@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import choices as ch
+
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -11,7 +13,7 @@ import requests
 
 
 def strip_text(strip_str):
-    return strip_str.text.stsrip()
+    return strip_str.text.strip()
 
 
 def round_currency(num):
@@ -70,17 +72,16 @@ def parse_privatbank():
 
     rates = response.json()
     source = 'privatbank'
-    available_currency_types = ('USD', 'EUR')
 
     for rate in rates:
         currency_type = rate['ccy']
-        if currency_type in available_currency_types:
-            currency_type = rate['ccy']
+        if currency_type in ch.available_currency_types:
+            ct = ch.available_currency_types[currency_type]
 
             sale = round_currency(rate['sale'])
             buy = round_currency(rate['buy'])
 
-            check_and_create(buy_check=buy, sale_check=sale, source_check=source, curr_type_check=currency_type)
+            check_and_create(buy_check=buy, sale_check=sale, source_check=source, curr_type_check=ct)
 
 
 @shared_task
@@ -101,7 +102,9 @@ def parse_bank_com_ua():
         buy = round_currency(strip_text(courses[elem_num]))
         sell = round_currency(strip_text(courses[elem_num+1]))
 
-        check_and_create(buy_check=buy, sale_check=sell, source_check='bank.com.ua', curr_type_check=name)
+        ct = ch.available_currency_types[name]
+
+        check_and_create(buy_check=buy, sale_check=sell, source_check='bank.com.ua', curr_type_check=ct)
 
 
 @shared_task
@@ -114,12 +117,12 @@ def parse_monobank():
 
     USD_code = 840
     EUR_code = 978
-    rates_dict = {USD_code: "USD", EUR_code: "EUR"}
+    rates_dict_codes = {USD_code: "USD", EUR_code: "EUR"}
     UAH_code = 980
 
     for rate in response.json():
-        if (int(rate["currencyCodeA"]) in rates_dict.keys()) and (rate["currencyCodeB"] == UAH_code):
-            curr_type = rates_dict[rate["currencyCodeA"]]
+        if (int(rate["currencyCodeA"]) in rates_dict_codes.keys()) and (rate["currencyCodeB"] == UAH_code):
+            curr_type = ch.available_currency_types[rates_dict_codes[rate["currencyCodeA"]]]
             buy = rate["rateBuy"]
             sell = rate["rateSell"]
 
@@ -134,13 +137,16 @@ def parse_vkurse_dp():
 
     avialable_currencies = {"Dollar": "USD", "Euro": "EUR"}
 
-    for rate in response.keys():
-        if rate in avialable_currencies.keys():
-            buy = round_currency(response[rate]["buy"])
-            sell = round_currency(response[rate]["sale"])
+    for rate_name in response.keys():
+        if rate_name in avialable_currencies.keys():
+            buy = round_currency(response[rate_name]["buy"])
+            sell = round_currency(response[rate_name]["sale"])
 
             check_and_create(
-                curr_type_check=avialable_currencies[rate], source_check='vkurse.dp', sale_check=sell, buy_check=buy
+                curr_type_check=ch.available_currency_types[avialable_currencies[rate_name]],
+                source_check='vkurse.dp',
+                sale_check=sell,
+                buy_check=buy
                 )
 
 
@@ -154,11 +160,9 @@ def parse_minfin():
 
     data = soup.find('tbody')
 
-    available_currencies = ('USD', 'EUR')
-
     for rate_info in data.find_all('tr'):
         curr_name = strip_text(rate_info.find('a'))
-        if curr_name in available_currencies:
+        if curr_name in ch.available_currency_types:
             details = rate_info.find_all('div', {'type': 'average'})
             for details_num in range(0, len(details), 3):
                 buy = strip_text(details[int(details_num)])[:-3]
@@ -166,4 +170,9 @@ def parse_minfin():
                 sell = strip_text(details[int(details_num+1)])[:-3]
                 sell = round_currency(sell.replace(',', '.'))
 
-                check_and_create(curr_type_check=curr_name, source_check='minfin', sale_check=sell, buy_check=buy)
+                check_and_create(
+                    curr_type_check=ch.available_currency_types[curr_name],
+                    source_check='minfin',
+                    sale_check=sell,
+                    buy_check=buy
+                    )
