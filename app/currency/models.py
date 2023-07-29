@@ -30,3 +30,4 @@ class ResponseLog(models.Model):
     status_code = models.PositiveSmallIntegerField()
     path = models.CharField(max_length=255)
     response_time = models.PositiveSmallIntegerField()
+    request_method = models.CharField(max_length=8, choices=ch.REQUEST_METHOD_TYPES)
