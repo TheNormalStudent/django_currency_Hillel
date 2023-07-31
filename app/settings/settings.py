@@ -34,11 +34,15 @@ INSTALLED_APPS = [
     'import_export',
 
     'currency',
+    'silk'
 
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
+
     'currency.middlewares.ResponseTimeMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
