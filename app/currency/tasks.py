@@ -41,17 +41,6 @@ def check_and_create(buy_check, sale_check, curr_type_check, source_check):
             )
 
 
-# @shared_task
-# def debug_task(sleep_time: int = 5):
-#     from currency.models import Rate
-#     print(f'Count Rates: {Rate.objects.count()}') # noqa
-
-#     # print("Starting debug") # noqa
-#     # from time import sleep
-#     # sleep(sleep_time)
-#     # print(f'Task completed in {sleep_time}') # noqa
-
-
 @shared_task
 def contact_us(subject, body):
     send_mail(
@@ -86,21 +75,25 @@ def parse_privatbank():
 
 @shared_task
 def parse_bank_com_ua():
-    currency_url = 'https://bank.com.ua'
-
-    response = requests.get(currency_url)
-
-    response.raise_for_status()
-
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-    courses = soup.find_all('span', {'class': 'course-table__rate'})
-    rates_name = soup.find_all('span', {'class': 'course-table__code'})
-
-    for elem_num in range(0, int(len(courses) / len(rates_name)) + 1, 3):
-        name = strip_text(rates_name[int(elem_num/3)])
-        buy = round_currency(strip_text(courses[elem_num]))
-        sell = round_currency(strip_text(courses[elem_num+1]))
+    currency_url = 'https://bank.com.ua'  
+    
+    response = requests.get(currency_url)  
+    
+    response.raise_for_status()  
+    
+    soup = BeautifulSoup(response.text, 'html.parser') 
+    
+    soup = soup.find('div', {'class': 'course-table__body'}) 
+    rows = soup.find_all('div', {'class': 'course-table__row'})
+    
+    for index, row in enumerate(rows): 
+        if index == 0: 
+            continue 
+        wrapper = row.find('div', {'class':'wrapper'}) 
+        cols = wrapper.findChildren('div')
+        name = strip_text(cols[0])[:3]
+        buy = round_currency(strip_text(cols[1]))
+        sell = round_currency(strip_text(cols[2]))
 
         ct = ch.available_currency_types[name]
 
@@ -123,8 +116,8 @@ def parse_monobank():
     for rate in response.json():
         if (int(rate["currencyCodeA"]) in rates_dict_codes.keys()) and (rate["currencyCodeB"] == UAH_code):
             curr_type = ch.available_currency_types[rates_dict_codes[rate["currencyCodeA"]]]
-            buy = rate["rateBuy"]
-            sell = rate["rateSell"]
+            buy = round_currency(rate["rateBuy"])
+            sell = round_currency(rate["rateSell"]) 
 
             check_and_create(curr_type_check=curr_type, source_check='monobank', sale_check=sell, buy_check=buy)
 
@@ -167,7 +160,7 @@ def parse_minfin():
             for details_num in range(0, len(details), 3):
                 buy = strip_text(details[int(details_num)])[:-3]
                 buy = round_currency(buy.replace(',', '.'))
-                sell = strip_text(details[int(details_num+1)])[:-3]
+                sell = strip_text(details[int(details_num+1)])[:-5]
                 sell = round_currency(sell.replace(',', '.'))
 
                 check_and_create(

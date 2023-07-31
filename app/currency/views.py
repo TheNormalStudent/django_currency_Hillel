@@ -43,7 +43,7 @@ class GeneratePasswordBView(TemplateView):
 
 
 class RateListView(ListView):
-    queryset = Rate.objects.all()
+    queryset = Rate.objects.all().order_by('-created')
     template_name = 'rate_front/rate_list.html'
 
 

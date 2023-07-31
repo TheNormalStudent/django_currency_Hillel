@@ -34,11 +34,15 @@ INSTALLED_APPS = [
     'import_export',
 
     'currency',
+    'silk'
 
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
+
     'currency.middlewares.ResponseTimeMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -157,7 +161,7 @@ CELERY_BEAT_SCHEDULE = {
         'parse_monobank':
     {
         'task': 'currency.tasks.parse_monobank',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/5'),
     },
         'parse_vkurse_dp':
     {

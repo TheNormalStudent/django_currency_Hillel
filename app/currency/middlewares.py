@@ -2,6 +2,7 @@ import time
 
 from currency.models import ResponseLog
 
+from currency import choices as ch
 
 class ResponseTimeMiddleware:
     def __init__(self, get_response):
@@ -13,10 +14,12 @@ class ResponseTimeMiddleware:
         end = time.time()
 
         print(f'Response time: {end - start}') # noqa
+        request_method = ch.REQUEST_METHODS_DICT[request.method]
         ResponseLog.objects.create(
             path=request.path,
             response_time=end-start,
             status_code=response.status_code,
+            request_method=request_method
         )
         return response
 

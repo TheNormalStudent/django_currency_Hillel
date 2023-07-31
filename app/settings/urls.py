@@ -9,4 +9,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('currency/', include('currency.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
+    path('silk/', include('silk.urls', namespace='silk'))
 ]
