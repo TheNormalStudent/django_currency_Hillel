@@ -1,6 +1,14 @@
 <div>
     <div><a href="/">Home</a></div> 
-    <dib><a href = "{% url 'currency:contactus-create' %} ">Contact Us</a></div>
-    <div><a href="#">SignUp</a></div>
-    <div><a href="#">LogOut</a></div>
-</div>
+    <dib><a href = "{% url 'currency:contactus-create' %}">Contact Us</a></div>
+
+    {%if request.user.is_authenticated%}
+        {{request.user.email}}
+        <div><a href="{% url 'accounts:my-profile' request.user.id %}">My Profile</a></div>
+        <div><a href="{% url 'logout' %}">Logout</a></div>
+    {% else %}
+        <div><a href="#">SignUp</a></div>
+        <div><a href="{% url 'login' %}">Login</a></div>
+    {% endif %}
+
+</div>  
