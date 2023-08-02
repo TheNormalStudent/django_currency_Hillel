@@ -4,6 +4,7 @@ from celery.schedules import crontab
 
 from config import get_username_and_password_for_settings as get_info
 
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +35,8 @@ INSTALLED_APPS = [
     'import_export',
 
     'currency',
-    'silk'
+    'silk',
+    'accounts'
 
 ]
 
@@ -174,3 +176,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1')
     },
 }
+
+
+AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
