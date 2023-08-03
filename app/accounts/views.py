@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from accounts.models import User
+
+from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 
-from accounts.models import User
-from django.urls import reverse_lazy
-
 # Create your views here.
+
 
 class MyProfileView(UpdateView):
     queryset = User.objects.all()

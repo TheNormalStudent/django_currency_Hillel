@@ -10,7 +10,7 @@ TYPE_GET = 'GET'
 TYPE_POST = 'POST'
 
 REQUEST_METHOD_TYPES = (
-    (TYPE_GET, 'get'), 
+    (TYPE_GET, 'get'),
     (TYPE_POST, 'post'),
 )
 

@@ -1,8 +1,8 @@
 import time
 
+from currency import choices as ch
 from currency.models import ResponseLog
 
-from currency import choices as ch
 
 class ResponseTimeMiddleware:
     def __init__(self, get_response):

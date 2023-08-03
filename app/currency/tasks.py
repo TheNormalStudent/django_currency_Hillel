@@ -75,21 +75,21 @@ def parse_privatbank():
 
 @shared_task
 def parse_bank_com_ua():
-    currency_url = 'https://bank.com.ua'  
-    
-    response = requests.get(currency_url)  
-    
-    response.raise_for_status()  
-    
-    soup = BeautifulSoup(response.text, 'html.parser') 
-    
-    soup = soup.find('div', {'class': 'course-table__body'}) 
+    currency_url = 'https://bank.com.ua'
+
+    response = requests.get(currency_url)
+
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    soup = soup.find('div', {'class': 'course-table__body'})
     rows = soup.find_all('div', {'class': 'course-table__row'})
-    
-    for index, row in enumerate(rows): 
-        if index == 0: 
-            continue 
-        wrapper = row.find('div', {'class':'wrapper'}) 
+
+    for index, row in enumerate(rows):
+        if index == 0:
+            continue
+        wrapper = row.find('div', {'class': 'wrapper'})
         cols = wrapper.findChildren('div')
         name = strip_text(cols[0])[:3]
         buy = round_currency(strip_text(cols[1]))
@@ -117,7 +117,7 @@ def parse_monobank():
         if (int(rate["currencyCodeA"]) in rates_dict_codes.keys()) and (rate["currencyCodeB"] == UAH_code):
             curr_type = ch.available_currency_types[rates_dict_codes[rate["currencyCodeA"]]]
             buy = round_currency(rate["rateBuy"])
-            sell = round_currency(rate["rateSell"]) 
+            sell = round_currency(rate["rateSell"])
 
             check_and_create(curr_type_check=curr_type, source_check='monobank', sale_check=sell, buy_check=buy)
 
@@ -158,7 +158,7 @@ def parse_minfin():
         if curr_name in ch.available_currency_types:
             details = rate_info.find_all('div', {'type': 'average'})
             for details_num in range(0, len(details), 3):
-                buy = strip_text(details[int(details_num)])[:-3]
+                buy = strip_text(details[int(details_num)])[:-5]
                 buy = round_currency(buy.replace(',', '.'))
                 sell = strip_text(details[int(details_num+1)])[:-5]
                 sell = round_currency(sell.replace(',', '.'))
