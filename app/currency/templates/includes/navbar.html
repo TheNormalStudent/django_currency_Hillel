@@ -7,7 +7,7 @@
         <div><a href="{% url 'accounts:my-profile' request.user.id %}">My Profile</a></div>
         <div><a href="{% url 'logout' %}">Logout</a></div>
     {% else %}
-        <div><a href="#">SignUp</a></div>
+        <div><a href="{% url 'accounts:sign-up' %}">SignUp</a></div>
         <div><a href="{% url 'login' %}">Login</a></div>
     {% endif %}
 

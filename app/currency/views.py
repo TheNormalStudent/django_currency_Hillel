@@ -8,9 +8,9 @@ from currency.utils import generate_password as gen_pass
 # from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse as HR
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
-from django.shortcuts import get_object_or_404, render # noqa
 
 
 class IndexView(TemplateView):
