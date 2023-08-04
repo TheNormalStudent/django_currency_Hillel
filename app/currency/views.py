@@ -6,6 +6,7 @@ from currency.utils import generate_password as gen_pass
 
 # from django.conf import settings
 # from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse as HR
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
@@ -47,29 +48,35 @@ class RateListView(ListView):
     template_name = 'rate_front/rate_list.html'
 
 
-class RateCreateView(CreateView):
+class RateCreateView(UserPassesTestMixin, CreateView):
     model = Rate  # or queryset = Rate.object.all() if you want some accurate set
     form_class = RateForm
     success_url = reverse_lazy('currency:rate-list')  # redirect place
     template_name = 'rate_front/rate_create.html'
 
 
-class RateDetailView(DetailView):
+class RateDetailView(LoginRequiredMixin, DetailView):
     queryset = Rate.objects.all()
     template_name = 'rate_front/rate_details.html'
 
 
-class RateUpdateView(UpdateView):
+class RateUpdateView(UserPassesTestMixin, UpdateView):
     queryset = Rate.objects.all()
     form_class = RateForm
     success_url = reverse_lazy('currency:rate-list')  # redirect place
     template_name = 'rate_front/rate_update.html'
 
+    def test_func(self):
+        return self.request.user.is_superuser
 
-class RateDeleteView(DeleteView):
+
+class RateDeleteView(UserPassesTestMixin, DeleteView):
     model = Rate
     success_url = reverse_lazy('currency:rate-list')
     template_name = 'rate_front/rate_delete.html'
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 # Source CRUD + Details

@@ -14,9 +14,13 @@ Rate list
         <td> Sell </td> 
         <td> Buy </td> 
         <td> Source </td>
-        <td> Details </td>
-        <td> Update </td> 
-        <td> Delete </td>
+        {% if request.user.is_authenticated %}
+            <td> Details </td>
+            {% if request.user.is_superuser %}
+                <td> Update </td> 
+                <td> Delete </td>
+            {% endif %}
+        {% endif %}
     </tr>
     {% for rate in rate_list %}
     <tr>
@@ -25,9 +29,13 @@ Rate list
         <td>{{rate.sale}}</td>
         <td>{{rate.buy}}</td>
         <td>{{rate.source}}</td>
-        <td><a href="{% url 'currency:rate-details' pk=rate.pk %}"> Details </a></td>
-        <td><a href="{% url 'currency:rate-update' pk=rate.pk %}"> Update </a></td>
-        <td><a href="{% url 'currency:rate-delete' pk=rate.pk %}"> Delete </a></td>
+        {% if request.user.is_authenticated %}
+            <td><a href="{% url 'currency:rate-details' pk=rate.pk %}"> Details </a></td>
+                {% if request.user.is_superuser %}
+                <td><a href="{% url 'currency:rate-update' pk=rate.pk %}"> Update </a></td>
+                <td><a href="{% url 'currency:rate-delete' pk=rate.pk %}"> Delete </a></td>
+                {% endif %}
+        {% endif %}
     </tr>
     {%endfor%}
 </table>
