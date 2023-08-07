@@ -14,7 +14,8 @@ class MyProfileView(LoginRequiredMixin, UpdateView):
     queryset = User.objects.all()
     fields = (
         'first_name',
-        'last_name'
+        'last_name',
+        'avatar',
     )
 
     success_url = reverse_lazy('index')

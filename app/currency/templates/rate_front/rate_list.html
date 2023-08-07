@@ -4,39 +4,56 @@
 Rate list
 {%endblock%}
 
+{% block add_navbar %}
+<li class="nav-item">
+    <a class="nav-link" href = "{% url 'currency:rate-create' %}">Create Rate</a>
+</li>
+{% endblock %}
+
 {% block main_content %}
-<a href = "{% url 'currency:rate-create' %}">Create Rate</a>
 <br>
-<table>
-    <tr>
-        <td> ID </td>
-        <td> Type </td>
-        <td> Sell </td> 
-        <td> Buy </td> 
-        <td> Source </td>
-        {% if request.user.is_authenticated %}
-            <td> Details </td>
-            {% if request.user.is_superuser %}
-                <td> Update </td> 
-                <td> Delete </td>
-            {% endif %}
-        {% endif %}
-    </tr>
-    {% for rate in rate_list %}
-    <tr>
-        <td>{{rate.id}}</td>    
-        <td>{{rate.get_type_display}}</td>
-        <td>{{rate.sale}}</td>
-        <td>{{rate.buy}}</td>
-        <td>{{rate.source}}</td>
-        {% if request.user.is_authenticated %}
-            <td><a href="{% url 'currency:rate-details' pk=rate.pk %}"> Details </a></td>
+<table class="table table-striped">
+    <thead>
+        <tr>    
+            <th scope="col"> ID </th>
+            <th scope="col"> Type </th>
+            <th scope="col"> Sell </th> 
+            <th scope="col"> Buy </th> 
+            <th scope="col"> Source </th>
+            {% if request.user.is_authenticated %}
+                <th scope="col"> Details </th>
                 {% if request.user.is_superuser %}
-                <td><a href="{% url 'currency:rate-update' pk=rate.pk %}"> Update </a></td>
-                <td><a href="{% url 'currency:rate-delete' pk=rate.pk %}"> Delete </a></td>
+                    <th scope="col"> Admin actions </th> 
                 {% endif %}
-        {% endif %}
-    </tr>
+            {% endif %}
+        </tr>
+    </thead>
+    {% for rate in rate_list %}
+    <tbody>
+        <tr>
+            <th scope="row">{{rate.id}}</th>    
+            <td>{{rate.get_type_display}}</td>
+            <td>{{rate.sale}}</td>
+            <td>{{rate.buy}}</td>
+            <td>{{rate.source}}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'currency:rate-details' pk=rate.pk %}"> Details </a></td>
+                    {% if request.user.is_superuser %}
+                    <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                         Admin actions
+                        </button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="{% url 'currency:rate-update' pk=rate.pk %}">Update</a>
+                          <a class="dropdown-item" href="{% url 'currency:rate-delete' pk=rate.pk %}">Delete</a>
+                        </div>
+                      </div>
+                      </td>
+                    {% endif %}
+            {% endif %}
+        </tr>
+    </tbody>
     {%endfor%}
 </table>
 {% endblock %}

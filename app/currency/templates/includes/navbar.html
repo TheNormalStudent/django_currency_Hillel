@@ -1,14 +1,18 @@
-<div>
-    <div><a href="/">Home</a></div> 
-    <dib><a href = "{% url 'currency:contactus-create' %}">Contact Us</a></div>
-
-    {%if request.user.is_authenticated%}
-        {{request.user.email}}
-        <div><a href="{% url 'accounts:my-profile' request.user.id %}">My Profile</a></div>
-        <div><a href="{% url 'logout' %}">Logout</a></div>
-    {% else %}
-        <div><a href="{% url 'accounts:sign-up' %}">SignUp</a></div>
-        <div><a href="{% url 'login' %}">Login</a></div>
-    {% endif %}
-
-</div>  
+{%if request.user.is_authenticated%}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:my-profile' request.user.id %}">My Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    </li>
+{% else %}
+<li class="nav-item">
+    <a class="btn btn-info" href="{% url 'accounts:sign-up' %}">SignUp</a>
+</li>
+<li class="nav-item">
+    <a class="btn btn-link" href="{% url 'login' %}">Login</a>
+</li>
+<li class="nav-item">   
+    <a class="nav-link" href="{% url 'currency:contactus-create' %}">Contact Us</a>
+</li>
+{% endif %} 
