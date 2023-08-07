@@ -4,12 +4,13 @@
 Index
 {%endblock%}
 
+{% block add_navbar %}
+<a class="nav-link" href ="{% url 'currency:rate-list' %}"> Rate List</a>
+<a class="nav-link" href ="{% url 'currency:source-list' %}"> Source List </a>
+{% endblock %}
+
 {% block main_content %}
-<div>
-    <a href ="{% url 'currency:rate-list' %}"> Rate List</a>
+<div class="row">
+    <div class="col-4">Hello from Index.html!</div>
 </div>
-<div>
-    <a href = "{% url 'currency:source-list' %}"> Source List </a>
-</div>
-Hello from Index.html!
 {%endblock%}

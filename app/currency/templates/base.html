@@ -1,18 +1,38 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<title>{% block title%}{% endblock %}</title>
 <head> 
     <meta charset="UTF-8">
+    <title>{% block title%}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
 </head>
 <body>
 
 {% include 'includes/messages.html' %}
 
-{% include 'includes/navbar.html' %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/"> Home </a>
+        <button class="navbar-toggler" type="button" data-toggle="'collapse" data-target="#navbarText" ariacontrols="navbarText" aria-expanded="false" aria-label="Toggle-navigation">
+            <span class="navbar-toggler-icon>"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            {% include 'includes/navbar.html' %}
+            {% block add_navbar %}
+            {% endblock %}
+        </ul>
+    </div>
+</nav>
 
-{% block main_content%}
-{% endblock %}
+<div class="container">
+    {% block main_content%}
+    {% endblock %}
+</div>
 
+<script src="{% static 'scripts/jquery-3.5.1.slim.min.js' %}"></script>
+<script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
 </body>
 <footer margin = -100px>
 {% include 'includes/footer.html' %}
