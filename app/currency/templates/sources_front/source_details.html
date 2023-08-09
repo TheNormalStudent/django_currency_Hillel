@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 Source Details
 {%endblock%}
@@ -11,5 +13,9 @@ Source Details
 ID: {{ object.id }} <br>
 Source Name: {{ object.name }} <br>
 URL: {{ object.source_url }} <br>
-
+{% if object.source_avatar %}
+Avatar: <img src = "{{ object.source_avatar.url }}" alt="Bank avatar" height="50px">
+{% else %}
+Avatar: <img src = "{% static 'images/none_icon_source.jpg' %}" height="50px">
+{% endif %}
 {% endblock %}

@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rangefilter',
     'import_export',
+    'crispy_bootstrap4',
+    'crispy_forms',
 
     'currency',
     'silk',
@@ -192,3 +194,5 @@ LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 HTTP_SCHEMA = 'http'
 DOMAIN = 'localhost:8000'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -48,7 +48,7 @@ class RateListView(ListView):
     template_name = 'rate_front/rate_list.html'
 
 
-class RateCreateView(UserPassesTestMixin, CreateView):
+class RateCreateView(CreateView):
     model = Rate  # or queryset = Rate.object.all() if you want some accurate set
     form_class = RateForm
     success_url = reverse_lazy('currency:rate-list')  # redirect place
