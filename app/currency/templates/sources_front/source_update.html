@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
 Source Update
 {%endblock%}
@@ -8,9 +10,9 @@ Source Update
 
 Source Update of Source {{ object.id }}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <button type="submit"> Update </button>
 </form>
 

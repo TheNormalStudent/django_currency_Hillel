@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
 Contacts
 {%endblock%}
@@ -10,7 +12,7 @@ Contact US
 
 <form method="post"> 
     {% csrf_token %}
-    {{ form.as_p}}
+    {{ form|crispy }}
 
     <button type="Submit"> Send to Django Serv </button>
 </form>

@@ -4,6 +4,9 @@ from django.db import models
 
 # Create your models here.
 
+def upload_source_avatar(instance, filename):
+    return f'source_avatars/{instance.id}/{filename}'
+
 
 class Rate(models.Model):
     sale = models.DecimalField(max_digits=5, decimal_places=2)
@@ -23,6 +26,13 @@ class ContactUs(models.Model):
 class Source(models.Model):
     source_url = models.CharField(max_length=256)
     name = models.CharField(max_length=64)
+
+    source_avatar = models.FileField(
+        upload_to=upload_source_avatar,
+        blank=True,
+        null=True,
+        default=None,
+    )
 
 
 class ResponseLog(models.Model):
