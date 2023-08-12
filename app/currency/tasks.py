@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 from celery import shared_task
 
 from currency import choices as ch
+from currency import consts
+from currency.models import Rate, Source
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -21,7 +23,6 @@ def round_currency(num):
 
 
 def check_and_create(buy_check, sale_check, curr_type_check, source_check):
-    from currency.models import Rate
 
     last_rate = Rate.objects.filter(
         type=curr_type_check,
@@ -60,7 +61,10 @@ def parse_privatbank():
     response.raise_for_status()
 
     rates = response.json()
-    source = 'privatbank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PRIVATBANK,
+        defaults={'name': 'PrivatBank'},
+    )[0]
 
     for rate in rates:
         currency_type = rate['ccy']
@@ -86,18 +90,23 @@ def parse_bank_com_ua():
     soup = soup.find('div', {'class': 'course-table__body'})
     rows = soup.find_all('div', {'class': 'course-table__row'})
 
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PIVDENNIY,
+        defaults={'name': 'Bank Pivdenniy'}
+    )[0]
+
     for index, row in enumerate(rows):
         if index == 0:
             continue
         wrapper = row.find('div', {'class': 'wrapper'})
         cols = wrapper.findChildren('div')
-        name = strip_text(cols[0])[:3]
+        name = strip_text(cols[0])[: 3]
         buy = round_currency(strip_text(cols[1]))
         sell = round_currency(strip_text(cols[2]))
 
         ct = ch.available_currency_types[name]
 
-        check_and_create(buy_check=buy, sale_check=sell, source_check='bank.com.ua', curr_type_check=ct)
+        check_and_create(buy_check=buy, sale_check=sell, source_check=source, curr_type_check=ct)
 
 
 @shared_task
@@ -113,13 +122,18 @@ def parse_monobank():
     rates_dict_codes = {USD_code: "USD", EUR_code: "EUR"}
     UAH_code = 980
 
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_MONOBANK,
+        defaults={'name': 'Monobank'}
+    )[0]
+
     for rate in response.json():
         if (int(rate["currencyCodeA"]) in rates_dict_codes.keys()) and (rate["currencyCodeB"] == UAH_code):
             curr_type = ch.available_currency_types[rates_dict_codes[rate["currencyCodeA"]]]
             buy = round_currency(rate["rateBuy"])
             sell = round_currency(rate["rateSell"])
 
-            check_and_create(curr_type_check=curr_type, source_check='monobank', sale_check=sell, buy_check=buy)
+            check_and_create(curr_type_check=curr_type, source_check=source, sale_check=sell, buy_check=buy)
 
 
 @shared_task
@@ -130,6 +144,11 @@ def parse_vkurse_dp():
 
     avialable_currencies = {"Dollar": "USD", "Euro": "EUR"}
 
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_VKURSE_DP,
+        defaults={'name': 'Vkurse.dp'}
+    )[0]
+
     for rate_name in response.keys():
         if rate_name in avialable_currencies.keys():
             buy = round_currency(response[rate_name]["buy"])
@@ -137,7 +156,7 @@ def parse_vkurse_dp():
 
             check_and_create(
                 curr_type_check=ch.available_currency_types[avialable_currencies[rate_name]],
-                source_check='vkurse.dp',
+                source_check=source,
                 sale_check=sell,
                 buy_check=buy
                 )
@@ -153,6 +172,11 @@ def parse_minfin():
 
     data = soup.find('tbody')
 
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_MINFIN,
+        defaults={'name': 'Minfin'}
+    )[0]
+
     for rate_info in data.find_all('tr'):
         curr_name = strip_text(rate_info.find('a'))
         if curr_name in ch.available_currency_types:
@@ -165,7 +189,7 @@ def parse_minfin():
 
                 check_and_create(
                     curr_type_check=ch.available_currency_types[curr_name],
-                    source_check='minfin',
+                    source_check=source,
                     sale_check=sell,
                     buy_check=buy
                     )
