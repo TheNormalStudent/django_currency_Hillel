@@ -18,4 +18,56 @@ Avatar: <img src = "{{ object.source_avatar.url }}" alt="Bank avatar" height="50
 {% else %}
 Avatar: <img src = "{% static 'images/none_icon_source.jpg' %}" height="50px">
 {% endif %}
+
+<br>
+
+Related Rates
+
+<br>
+<br>
+
+<table class="table table-striped">
+    <thead>
+        <tr>    
+            <th scope="col"> ID </th>
+            <th scope="col"> Type </th>
+            <th scope="col"> Sell </th> 
+            <th scope="col"> Buy </th> 
+            <th scope="col"> Source </th>
+            {% if request.user.is_authenticated %}
+                <th scope="col"> Details </th>
+                {% if request.user.is_superuser %}
+                    <th scope="col"> Admin actions </th> 
+                {% endif %}
+            {% endif %}
+        </tr>
+    </thead>
+    {% for rate in object.rates.all %}
+    <tbody>
+        <tr>
+            <th scope="row">{{rate.id}}</th>    
+            <td>{{rate.get_type_display}}</td>
+            <td>{{rate.sale}}</td>
+            <td>{{rate.buy}}</td>
+            <td>{{rate.source.name}}</td>
+            {% if request.user.is_authenticated %}
+                <td><a href="{% url 'currency:rate-details' pk=rate.pk %}"> Details </a></td>
+                    {% if request.user.is_superuser %}
+                    <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                         Admin actions
+                        </button>
+                        <div class="dropdown-menu">
+                          <a class="dropdown-item" href="{% url 'currency:rate-update' pk=rate.pk %}">Update</a>
+                          <a class="dropdown-item" href="{% url 'currency:rate-delete' pk=rate.pk %}">Delete</a>
+                        </div>
+                      </div>
+                      </td>
+                    {% endif %}
+            {% endif %}
+        </tr>
+    </tbody>
+    {%endfor%}
+</table>
 {% endblock %}
