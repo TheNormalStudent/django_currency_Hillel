@@ -7,7 +7,7 @@ from currency.utils import generate_password as gen_pass
 # from django.conf import settings
 # from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse as HR
+from django.http import HttpResponse as HR, JsonResponse as JR
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View

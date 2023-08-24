@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'currency',
     'silk',
+    'rest_framework',
+    'api',
 
 ]
 
