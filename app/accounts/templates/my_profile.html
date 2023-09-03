@@ -9,7 +9,7 @@ My Profile
 
 {% block main_content %}
 
-Hello, {{request.user.username}}!  
+Hello, {{request.user.first_name}}!  
 
 {% if request.user.avatar %}
 <img src="{{ request.user.avatar.url }}" class="rounded-circle h150" alt="Your avatar">
