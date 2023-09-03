@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from datetime import timedelta
+
 from celery.schedules import crontab
 
 from config import get_username_and_password_for_settings as get_info
@@ -23,6 +25,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'accounts',
+    'silk',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,9 +42,12 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'currency',
-    'silk',
     'rest_framework',
+    'rest_framework_simplejwt',
     'api',
+    'drf_yasg',
+    'django_filters',
+
 
 ]
 
@@ -198,3 +204,74 @@ HTTP_SCHEMA = 'http'
 DOMAIN = 'localhost:8000'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ( # 401
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ( # 403
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'rates_anon_trottle': '4/min',
+    },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=14),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
+    'AUTH_HEADER_NAME': "HTTP_AUTHORIZATION",
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+    
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+# LOGGING = {
+#     'version': 1,
+#     'filters' : {
+#         'require_debug_true':{
+#             '()':'django.utils.log.RequireDebugTrue',
+#         },
+#     },
+#     'handlers': {
+#         'console':{
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',}
+#     },
+#     'loggers': {
+#         'django.db.backends':{
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }
