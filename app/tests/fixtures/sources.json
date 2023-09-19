@@ -1,7 +1,6 @@
 [
     {
-        "model": 
-        "currency.source", 
+        "model": "currency.source", 
         "pk": 1, 
         "fields": 
         {

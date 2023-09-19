@@ -29,7 +29,7 @@ class RateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rate
-        fields = (
+        fields = [
             'id',
             'buy',
             'sale',
@@ -37,7 +37,7 @@ class RateSerializer(serializers.ModelSerializer):
             'source_obj',
             'source',
             'created'
-        )
+        ]
         extra_kwargs = {
             'source': {'write_only': True}
         }

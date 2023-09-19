@@ -107,7 +107,7 @@ class SourceDeleteView(DeleteView):
 
 
 class SourceDetailView(DetailView):
-    queryset = Source.objects.all()
+    queryset = Source.objects.all().prefetch_related('rates')
     template_name = 'sources_front/source_details.html'
 
 
