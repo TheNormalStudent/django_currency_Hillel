@@ -107,7 +107,7 @@ class SourceDeleteView(DeleteView):
 
 
 class SourceDetailView(DetailView):
-    queryset = Source.objects.all()
+    queryset = Source.objects.all().prefetch_related('rates')
     template_name = 'sources_front/source_details.html'
 
 
@@ -131,7 +131,7 @@ class ContactUsCreateView(CreateView):
         Body: {body}
         '''
 
-        contact_us.apply_async(args=(subject, ), kwargs={'body': full_email_body})
+        contact_us.apply_async(args=(subject, full_email_body))
 
         return super().form_valid(form)
 

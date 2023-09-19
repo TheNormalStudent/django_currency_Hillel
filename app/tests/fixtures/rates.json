@@ -1,0 +1,13 @@
+[
+    {
+        "model": "currency.rate", 
+        "pk": 1, 
+        "fields": {
+            "sale":30,
+            "buy":40,
+            "created":"2023-01-01T20:36:00.963797Z",
+            "source": 1,
+            "type": "USD"
+        }
+    }
+]

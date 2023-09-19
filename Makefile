@@ -16,3 +16,6 @@ shell:
 
 beat:
 	cd app && celery -A settings beat -l info
+
+pytest_report_html:
+	pytest ./app/tests/ --cov=app --cov-report html && coverage report --fail-under=65

@@ -1,0 +1,12 @@
+[
+    {
+        "model": "currency.source", 
+        "pk": 1, 
+        "fields": 
+        {
+            "source_url": "http://test_bank.ua", 
+            "name": "TEST_Bank", 
+            "code_name": "CODE_NAME_TESTBANK"
+        }
+    }
+]
